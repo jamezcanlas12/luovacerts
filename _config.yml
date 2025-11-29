@@ -1,0 +1,4 @@
+webrick:
+  mime_types:
+    '.application': 'application/x-ms-application'
+    '.manifest': 'application/x-ms-manifest'
