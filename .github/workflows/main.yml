@@ -1,0 +1,35 @@
+name: Deploy Auto-Update
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write  # Allows GitHub to create the Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore Packages
+        run: nuget restore LuovaCertProj1.sln
+
+      - name: Build Project
+        run: msbuild LuovaCertProj1.sln /p:Configuration=Release
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          files: |
+            bin/Release/setup.exe
+            bin/Release/LuovaCertProj1.application
